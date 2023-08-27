@@ -1,13 +1,15 @@
-import React from "react";
+import React, { Component} from "react";
 import "./tasks-filter.css";
 
-const TasksFilter = ({butEl}) => {
+class TasksFilter extends Component{
 
-    return (
-        <li key={butEl.id }>
-            <button className={butEl.className}>{butEl.text}</button>
-        </li>
-    )
+
+    render() {
+        const {butEl} = this.props;
+        return (
+                <button  id={butEl.id} onClick={this.props.conditionTodo} className={butEl.className}>{butEl.text}</button>
+        );
+    }
 }
 
 export default TasksFilter;

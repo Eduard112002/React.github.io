@@ -137,9 +137,11 @@
 }
 
 .done{
+	position: relative;
 	color: #999999;
 	text-decoration: line-through;
 }
+
 
 .btn{
 	position: absolute;

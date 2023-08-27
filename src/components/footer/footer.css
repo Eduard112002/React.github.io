@@ -65,9 +65,10 @@
 	border-color: rgba(175, 47, 47, 0.1);
 }
 
-.filters li button.selected {
+.filters li button.selected{
 	border-color: rgba(175, 47, 47, 0.2);
 }
+
 
 .clear-completed,
 html .clear-completed:active {
