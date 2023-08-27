@@ -87,7 +87,6 @@ class TodoApp extends Component{
               styleLi: newMAs
           }
     })
-        console.log(this.state.styleLi)
     }
 
     filterTodoList = (item) => {

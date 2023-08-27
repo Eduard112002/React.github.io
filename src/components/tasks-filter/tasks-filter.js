@@ -3,7 +3,6 @@ import "./tasks-filter.css";
 
 class TasksFilter extends Component{
 
-
     render() {
         const {butEl} = this.props;
         return (
