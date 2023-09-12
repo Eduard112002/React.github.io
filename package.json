@@ -21,7 +21,8 @@
     "format": "prettier --write ./src",
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "vercel": "vercel"
   },
   "husky": {
     "hooks": {
@@ -60,3 +61,4 @@
     "prettier": "3.0.3"
   }
 }
+

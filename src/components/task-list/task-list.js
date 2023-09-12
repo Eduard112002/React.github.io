@@ -23,7 +23,6 @@ class TaskList extends Component {
 
   render() {
     const { taskli, onDelete, onLabelDone, editClass, editLabel } = this.props;
-
     const elements = taskli.map((el) => {
       return (
         <Task

@@ -19,13 +19,15 @@ class TodoApp extends Component {
     ],
   };
 
-  createItem = (label) => {
+  createItem = (label, min, sec) => {
     return {
       label: label,
       time: new Date(),
       done: false,
       id: (this.maxId += 1),
       edit: false,
+      min: min,
+      sec: sec,
     };
   };
 
@@ -44,8 +46,10 @@ class TodoApp extends Component {
   toggleProperty(arr, id, propName) {
     const index = arr.findIndex((el) => el.id === id);
     const oldItem = arr[index];
-    const newItem = { ...oldItem, [propName]: !oldItem[propName] };
-
+    const newItem = {
+      ...oldItem,
+      [propName]: !oldItem[propName],
+    };
     return [...arr.slice(0, index), newItem, ...arr.slice(index + 1)];
   }
 
@@ -68,7 +72,6 @@ class TodoApp extends Component {
   onLabelDone = (id) => {
     this.setState(({ styleLi }) => {
       const newArray = this.toggleProperty(styleLi, id, 'done');
-
       return {
         styleLi: newArray,
       };
@@ -108,8 +111,8 @@ class TodoApp extends Component {
     }
   };
 
-  addItem = (text) => {
-    const newItem = this.createItem(text);
+  addItem = (text, min, sec) => {
+    const newItem = this.createItem(text, min, sec);
     this.setState(({ styleLi }) => {
       const newArr = [...styleLi, newItem];
 
@@ -140,13 +143,14 @@ class TodoApp extends Component {
     });
   };
   render() {
-    const { styleLi, butEL } = this.state;
+    const { styleLi, butEL, taskTime } = this.state;
     const doneCount = styleLi.filter((el) => !el.done).length;
     return (
       <section className="todoapp">
         <NewTaskForm addItem={this.addItem} />
         <TaskList
           taskli={this.filterTodoList(styleLi)}
+          taskTime={taskTime}
           onDelete={this.deleted}
           onLabelDone={this.onLabelDone}
           editClass={this.editClass}

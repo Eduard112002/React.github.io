@@ -16,7 +16,7 @@ class Footer extends Component {
     });
     return (
       <footer className="footer">
-        <span className="todo-count"> {done} items left</span>
+        <div className="todo-count">{done} items left</div>
         <ul className="filters">{elements}</ul>
         <button onClick={clearCompleted} className="clear-completed">
           Clear completed
