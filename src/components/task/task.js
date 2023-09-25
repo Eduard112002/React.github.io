@@ -5,15 +5,19 @@ class Task extends Component {
   state = {
     done: false,
     label: this.props.taskEL.label,
-    oldMin: Number(this.props.taskEL.min),
-    oldSec: Number(this.props.taskEL.sec),
+    oldMin: null,
+    oldSec: null,
     min: Number(this.props.taskEL.min),
     sec: Number(this.props.taskEL.sec),
+    timer: false,
   };
   id = null;
 
   timerPause = () => {
     clearInterval(this.id);
+    this.setState({
+      timer: false,
+    });
   };
 
   timerPlay = () => {
@@ -32,34 +36,51 @@ class Task extends Component {
   };
 
   taskTimer = () => {
-    this.id = setInterval(() => {
-      this.setState(({ min, sec }) => {
-        let newMin;
-        let newSec;
-        if (sec === 0 && min !== 0) {
-          newSec = 59;
-          newMin = min - 1;
-        } else if (min === 0 && sec === 0) {
-          clearInterval(this.id);
+    const { timer } = this.state;
+    const { timerStyleLi, taskEL } = this.props;
+    if (!timer) {
+      this.id = setInterval(() => {
+        this.setState(({ min, sec }) => {
+          let newMin;
+          let newSec;
+          if (sec === 0 && min !== 0) {
+            newSec = 59;
+            newMin = min - 1;
+          } else if (min === 0 && sec === 0) {
+            clearInterval(this.id);
+            return {
+              min: 0,
+              sec: 0,
+            };
+          }
+          if (sec !== 0) {
+            newSec = sec - 1;
+            newMin = min;
+          }
+          timerStyleLi(newMin, newSec, taskEL.id);
           return {
-            min: 0,
-            sec: 0,
+            timer: true,
+            min: newMin,
+            sec: newSec,
           };
-        }
-        if (sec !== 0) {
-          newSec = sec - 1;
-          newMin = min;
-        }
-        return {
-          min: newMin,
-          sec: newSec,
-        };
-      });
-    }, 1000);
+        });
+      }, 1000);
+    }
   };
 
   componentDidMount() {
+    const { id } = this.props.taskEL;
     this.taskTimer();
+    this.props.taskTimerOld(id, false);
+    this.setState({
+      oldMin: Number(this.props.taskEL.min),
+      oldSec: Number(this.props.taskEL.sec),
+    });
+  }
+
+  componentWillUnmount() {
+    const { id } = this.props.taskEL;
+    this.props.taskTimerOld(id, true);
   }
 
   onLabelChange = (e) => {
@@ -85,9 +106,7 @@ class Task extends Component {
     let classNAme = 'label';
     if (done) {
       classNAme += ' done';
-      this.timerPause();
     }
-
     let classNameInput = '';
     if (edit) {
       classNameInput += ' editing';
