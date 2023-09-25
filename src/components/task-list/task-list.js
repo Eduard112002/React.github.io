@@ -22,7 +22,7 @@ class TaskList extends Component {
   };
 
   render() {
-    const { taskli, onDelete, onLabelDone, editClass, editLabel } = this.props;
+    const { taskli, onDelete, onLabelDone, editClass, editLabel, timerStyleLi, taskTimerOld } = this.props;
     const elements = taskli.map((el) => {
       return (
         <Task
@@ -32,6 +32,8 @@ class TaskList extends Component {
           onLabelDone={() => onLabelDone(el.id)}
           editClass={() => editClass(el.id)}
           editLabel={editLabel}
+          timerStyleLi={timerStyleLi}
+          taskTimerOld={taskTimerOld}
         />
       );
     });
@@ -43,7 +45,5 @@ class TaskList extends Component {
     );
   }
 }
-
-//()
 
 export default TaskList;
