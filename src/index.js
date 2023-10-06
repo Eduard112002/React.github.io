@@ -33,12 +33,10 @@ const TodoApp = () => {
   };
 
   const deleted = (id) => {
-    console.log(styleLi, 'delete start');
     setStyleLi(styleLi.filter((el) => el.id !== id));
   };
 
   function toggleProperty(arr, id, propName) {
-    console.log(10);
     const index = arr.findIndex((el) => el.id === id);
     const oldItem = arr[index];
     const newItem = {
@@ -48,7 +46,6 @@ const TodoApp = () => {
     return [...arr.slice(0, index), newItem, ...arr.slice(index + 1)];
   }
   function conditionProperty(arr, id, propName) {
-    console.log(11);
     const index = arr.findIndex((el) => el.id === id);
     const oldItem = arr.find((el) => el.id === id);
     const oldItemSelect = arr.filter((el) => el.id !== id);
@@ -65,14 +62,12 @@ const TodoApp = () => {
   }
 
   const onLabelDone = (id) => {
-    console.log(12);
     const newArrayDone = toggleProperty(styleLi, id, 'done');
     const newArra = toggleProperty(newArrayDone, id, 'timeDone');
     setStyleLi(newArra);
   };
 
   const conditionTodo = (text, id) => {
-    console.log(13);
     const newArr = conditionProperty(butEL, id, 'selected');
     setFilter(text);
     setButEl(newArr);
@@ -80,10 +75,17 @@ const TodoApp = () => {
 
   const clearCompleted = () => {
     console.log(15);
-    const newMAs = styleLi.filter((el) => !el.done);
-    setStyleLi(newMAs);
+    setStyleLi((newMAs) =>
+      newMAs.filter((el) => {
+        if (!el.done) {
+          return true;
+        } else {
+          clearInterval(el.idTimeEl);
+          return false;
+        }
+      })
+    );
   };
-
   const filterTodoList = (item) => {
     switch (filter) {
       case 'All':
@@ -98,42 +100,42 @@ const TodoApp = () => {
   };
 
   const addItem = (text, min, sec) => {
-    console.log(17);
     const newItem = createItem(text, min, sec);
     setStyleLi((s) => [...s, newItem]);
   };
   const timerStyleLi = (min, sec, id) => {
-    const index = styleLi.findIndex((el) => el.id === id);
-    const newItemStyleLi = styleLi[index];
-    const arr = [...styleLi];
-    arr[index] = {
-      ...newItemStyleLi,
-      min: min,
-      sec: sec,
-    };
-    setStyleLi(arr);
+    console.log('tyt');
+    setStyleLi((state) => {
+      const index = state.findIndex((el) => el.id === id);
+      const newItemStyleLi = state[index];
+      const arr = [...state];
+      arr[index] = {
+        ...newItemStyleLi,
+        min: min,
+        sec: sec,
+      };
+      return arr;
+    });
   };
   const editLabel = (id, label) => {
-    console.log(19);
     const index = styleLi.findIndex((el) => el.id === id);
     const oldArray = styleLi[index];
     const newItem = { ...oldArray, label: label };
     setStyleLi((s) => [...s.slice(0, index), newItem, ...s.slice(index + 1)]);
   };
   const addIdTimeEl = (id, idTime) => {
-    console.log(idTime, 'addIdtimer');
-    const index = styleLi.findIndex((el) => el.id === id);
-    const oldEl = styleLi.find((el) => el.id === id);
-    const newEl = { ...oldEl, idTimeEl: idTime };
-    setStyleLi((s) => [...s.slice(0, index), newEl, ...s.slice(index + 1)]);
+    setStyleLi((s) => {
+      const index = styleLi.findIndex((el) => el.id === id);
+      const oldEl = styleLi[index];
+      const newEl = { ...oldEl, idTimeEl: idTime };
+      return [...s.slice(0, index), newEl, ...s.slice(index + 1)];
+    });
   };
   const editClass = (id) => {
-    console.log(20);
     const newArray = toggleProperty(styleLi, id, 'edit');
     setStyleLi(newArray);
   };
   const doneCount = styleLi.filter((el) => !el.done).length;
-  console.log(styleLi);
   return (
     <section className="todoapp">
       <NewTaskForm addItem={addItem} />
