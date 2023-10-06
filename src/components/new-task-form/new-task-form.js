@@ -1,48 +1,64 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import './new-task-form.css';
 
-class NewTaskForm extends Component {
-  static propTypes = {
-    addItem: PropTypes.func,
+const NewTaskForm = ({ addItem }) => {
+  const [label, setLabel] = useState('');
+  const [min, setMin] = useState('');
+  const [sec, setSec] = useState('');
+
+  const onLabelChange = (e) => {
+    setLabel(e.target.value);
   };
 
-  state = {
-    label: '',
+  const onMinChange = (e) => {
+    setMin(e.target.value);
   };
 
-  onLabelChange = (e) => {
-    this.setState({
-      label: e.target.value,
-    });
+  const onSecChange = (e) => {
+    setSec(e.target.value);
   };
 
-  onSubmit = (e) => {
+  const onSubmit = (e) => {
     e.preventDefault();
-    if (this.state.label) {
-      this.props.addItem(this.state.label);
+    if (label) {
+      addItem(label, min, sec);
     }
-    this.setState({
-      label: '',
-    });
+    setLabel('');
+    setMin('');
+    setSec('');
   };
 
-  render() {
-    return (
-      <header className="header">
-        <h1>Todos</h1>
-        <form onSubmit={this.onSubmit}>
-          <input
-            className="new-todo"
-            placeholder="What needs to be done?"
-            autoFocus
-            onChange={this.onLabelChange}
-            value={this.state.label}
-          ></input>
-        </form>
-      </header>
-    );
-  }
-}
+  return (
+    <header className="header">
+      <h1>Todos</h1>
+      <form onSubmit={onSubmit} className="new-todo-form">
+        <button type="submit" />
+        <input
+          className="new-todo"
+          placeholder="What needs to be done?"
+          autoFocus
+          onChange={onLabelChange}
+          value={label}
+        />
+        <input
+          onChange={onMinChange}
+          value={min}
+          className="new-todo-form__timer"
+          placeholder="Min"
+          type="number"
+          max="99"
+        />
+        <input
+          onChange={onSecChange}
+          value={sec}
+          className="new-todo-form__timer"
+          placeholder="Sec"
+          type="number"
+          max="59"
+        />
+      </form>
+    </header>
+  );
+};
 
 export default NewTaskForm;

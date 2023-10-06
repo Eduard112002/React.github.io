@@ -1,41 +1,25 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 
 import TasksFilter from '../tasks-filter/tasks-filter';
 import './footer.css';
 
-class Footer extends Component {
-  render() {
-    const { done, conditionTodo, clearCompleted, butEL } = this.props;
-    const elements = butEL.map((el) => {
-      return (
-        <li key={el.id}>
-          <TasksFilter butEl={el} conditionTodo={() => conditionTodo(el.text, el.id)} />
-        </li>
-      );
-    });
+const Footer = ({ done, conditionTodo, clearCompleted, butEL }) => {
+  const elements = butEL.map((el) => {
     return (
-      <footer className="footer">
-        <span className="todo-count"> {done} items left</span>
-        <ul className="filters">{elements}</ul>
-        <button onClick={clearCompleted} className="clear-completed">
-          Clear completed
-        </button>
-      </footer>
+      <li key={el.id}>
+        <TasksFilter butEl={el} conditionTodo={() => conditionTodo(el.text, el.id)} />
+      </li>
     );
-  }
-}
-Footer.defaultProps = {
-  conditionTodo: () => {},
-  clearCompleted: () => {},
-  butEL: [],
-};
-
-Footer.propTypes = {
-  done: PropTypes.number,
-  conditionTodo: PropTypes.func,
-  clearCompleted: PropTypes.func,
-  butEL: PropTypes.array,
+  });
+  return (
+    <footer className="footer">
+      <div className="todo-count">{done} items left</div>
+      <ul className="filters">{elements}</ul>
+      <button onClick={clearCompleted} className="clear-completed">
+        Clear completed
+      </button>
+    </footer>
+  );
 };
 
 export default Footer;

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './style.css';
 
@@ -6,50 +6,49 @@ import NewTaskForm from './components/new-task-form';
 import TaskList from './components/task-list/task-list';
 import Footer from './components/footer/footer';
 
-class TodoApp extends Component {
-  maxId = 100;
-
-  state = {
-    styleLi: [],
-    filter: 'All',
-    butEL: [
-      { text: 'All', selected: false, id: 'Al' },
-      { text: 'Active', selected: false, id: 'Ac' },
-      { text: 'Completed', selected: false, id: 'Com' },
-    ],
-  };
-
-  createItem = (label) => {
+const TodoApp = () => {
+  const [styleLi, setStyleLi] = useState([]);
+  const [filter, setFilter] = useState('All');
+  const [maxId, setMaxId] = useState(10);
+  const tabs = [
+    { text: 'All', selected: false, id: 'Al' },
+    { text: 'Active', selected: false, id: 'Ac' },
+    { text: 'Completed', selected: false, id: 'Com' },
+  ];
+  const [butEL, setButEl] = useState(tabs);
+  const createItem = (label, min, sec) => {
+    setMaxId((s) => s + 1);
     return {
       label: label,
       time: new Date(),
       done: false,
-      id: (this.maxId += 1),
+      id: maxId,
       edit: false,
+      min: min,
+      sec: sec,
+      oldMin: min,
+      oldSec: sec,
+      idTimeEl: null,
     };
   };
 
-  deleted = (id) => {
-    this.setState(({ styleLi }) => {
-      const index = styleLi.findIndex((el) => el.id === id);
-
-      const newAll = [...styleLi.slice(0, index), ...styleLi.slice(index + 1)];
-
-      return {
-        styleLi: newAll,
-      };
-    });
+  const deleted = (id) => {
+    console.log(styleLi, 'delete start');
+    setStyleLi(styleLi.filter((el) => el.id !== id));
   };
 
-  toggleProperty(arr, id, propName) {
+  function toggleProperty(arr, id, propName) {
+    console.log(10);
     const index = arr.findIndex((el) => el.id === id);
     const oldItem = arr[index];
-    const newItem = { ...oldItem, [propName]: !oldItem[propName] };
-
+    const newItem = {
+      ...oldItem,
+      [propName]: !oldItem[propName],
+    };
     return [...arr.slice(0, index), newItem, ...arr.slice(index + 1)];
   }
-
-  conditionProperty(arr, id, propName) {
+  function conditionProperty(arr, id, propName) {
+    console.log(11);
     const index = arr.findIndex((el) => el.id === id);
     const oldItem = arr.find((el) => el.id === id);
     const oldItemSelect = arr.filter((el) => el.id !== id);
@@ -65,38 +64,28 @@ class TodoApp extends Component {
     return [...arr.slice(0, index), newItem, ...arr.slice(index + 1)];
   }
 
-  onLabelDone = (id) => {
-    this.setState(({ styleLi }) => {
-      const newArray = this.toggleProperty(styleLi, id, 'done');
-
-      return {
-        styleLi: newArray,
-      };
-    });
+  const onLabelDone = (id) => {
+    console.log(12);
+    const newArrayDone = toggleProperty(styleLi, id, 'done');
+    const newArra = toggleProperty(newArrayDone, id, 'timeDone');
+    setStyleLi(newArra);
   };
 
-  conditionTodo = (text, id) => {
-    const newArr = this.conditionProperty(this.state.butEL, id, 'selected');
-
-    this.setState(() => {
-      return {
-        filter: text,
-        butEL: newArr,
-      };
-    });
+  const conditionTodo = (text, id) => {
+    console.log(13);
+    const newArr = conditionProperty(butEL, id, 'selected');
+    setFilter(text);
+    setButEl(newArr);
   };
 
-  clearCompleted = () => {
-    const newMAs = this.state.styleLi.filter((el) => !el.done);
-    this.setState(() => {
-      return {
-        styleLi: newMAs,
-      };
-    });
+  const clearCompleted = () => {
+    console.log(15);
+    const newMAs = styleLi.filter((el) => !el.done);
+    setStyleLi(newMAs);
   };
 
-  filterTodoList = (item) => {
-    switch (this.state.filter) {
+  const filterTodoList = (item) => {
+    switch (filter) {
       case 'All':
         return item;
 
@@ -108,60 +97,59 @@ class TodoApp extends Component {
     }
   };
 
-  addItem = (text) => {
-    const newItem = this.createItem(text);
-    this.setState(({ styleLi }) => {
-      const newArr = [...styleLi, newItem];
-
-      return {
-        styleLi: newArr,
-      };
-    });
+  const addItem = (text, min, sec) => {
+    console.log(17);
+    const newItem = createItem(text, min, sec);
+    setStyleLi((s) => [...s, newItem]);
   };
-
-  editLabel = (id, label) => {
-    this.setState(({ styleLi }) => {
-      const index = styleLi.findIndex((el) => el.id === id);
-      const oldArray = styleLi[index];
-      const newItem = { ...oldArray, label: label };
-      return {
-        styleLi: [...styleLi.slice(0, index), newItem, ...styleLi.slice(index + 1)],
-      };
-    });
+  const timerStyleLi = (min, sec, id) => {
+    const index = styleLi.findIndex((el) => el.id === id);
+    const newItemStyleLi = styleLi[index];
+    const arr = [...styleLi];
+    arr[index] = {
+      ...newItemStyleLi,
+      min: min,
+      sec: sec,
+    };
+    setStyleLi(arr);
   };
-
-  editClass = (id) => {
-    this.setState(({ styleLi }) => {
-      const newArray = this.toggleProperty(styleLi, id, 'edit');
-
-      return {
-        styleLi: newArray,
-      };
-    });
+  const editLabel = (id, label) => {
+    console.log(19);
+    const index = styleLi.findIndex((el) => el.id === id);
+    const oldArray = styleLi[index];
+    const newItem = { ...oldArray, label: label };
+    setStyleLi((s) => [...s.slice(0, index), newItem, ...s.slice(index + 1)]);
   };
-  render() {
-    const { styleLi, butEL } = this.state;
-    const doneCount = styleLi.filter((el) => !el.done).length;
-    return (
-      <section className="todoapp">
-        <NewTaskForm addItem={this.addItem} />
-        <TaskList
-          taskli={this.filterTodoList(styleLi)}
-          onDelete={this.deleted}
-          onLabelDone={this.onLabelDone}
-          editClass={this.editClass}
-          editLabel={this.editLabel}
-        />
-        <Footer
-          done={doneCount}
-          conditionTodo={this.conditionTodo}
-          butEL={butEL}
-          clearCompleted={this.clearCompleted}
-        />
-      </section>
-    );
-  }
-}
+  const addIdTimeEl = (id, idTime) => {
+    console.log(idTime, 'addIdtimer');
+    const index = styleLi.findIndex((el) => el.id === id);
+    const oldEl = styleLi.find((el) => el.id === id);
+    const newEl = { ...oldEl, idTimeEl: idTime };
+    setStyleLi((s) => [...s.slice(0, index), newEl, ...s.slice(index + 1)]);
+  };
+  const editClass = (id) => {
+    console.log(20);
+    const newArray = toggleProperty(styleLi, id, 'edit');
+    setStyleLi(newArray);
+  };
+  const doneCount = styleLi.filter((el) => !el.done).length;
+  console.log(styleLi);
+  return (
+    <section className="todoapp">
+      <NewTaskForm addItem={addItem} />
+      <TaskList
+        taskli={filterTodoList(styleLi)}
+        timerStyleLi={timerStyleLi}
+        onDelete={deleted}
+        onLabelDone={onLabelDone}
+        editClass={editClass}
+        editLabel={editLabel}
+        addIdTimeEl={addIdTimeEl}
+      />
+      <Footer done={doneCount} conditionTodo={conditionTodo} butEL={butEL} clearCompleted={clearCompleted} />
+    </section>
+  );
+};
 
 const container = createRoot(document.getElementById('root'));
 
