@@ -3,7 +3,16 @@ import './task-list.css';
 
 import Task from '../task/task';
 
-const TaskList = ({ taskli, onDelete, onLabelDone, editClass, editLabel, timerStyleLi, addIdTimeEl }) => {
+const TaskList = ({
+  taskli,
+  onDelete,
+  onLabelDone,
+  editClass,
+  editLabel,
+  timerStyleLi,
+  addIdTimeEl,
+  checkingTimer,
+}) => {
   const elements = taskli.map((el) => {
     return (
       <Task
@@ -15,6 +24,7 @@ const TaskList = ({ taskli, onDelete, onLabelDone, editClass, editLabel, timerSt
         editLabel={editLabel}
         timerStyleLi={timerStyleLi}
         addIdTimeEl={addIdTimeEl}
+        checkingTimer={checkingTimer}
       />
     );
   });
