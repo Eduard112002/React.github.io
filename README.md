@@ -1,2 +1,2 @@
 # React.github.io
-https://react-omega-three.vercel.app
+https://react-github-hvz4a5zfh-barelis-mailru.vercel.app/
