@@ -126,15 +126,10 @@ const TodoApp = () => {
     setStyleLi((s) => [...s.slice(0, index), newItem, ...s.slice(index + 1)]);
   };
   const addIdTimeEl = (id, idTime) => {
-    console.log('tyt');
     setStyleLi((state) => {
       const index = state.findIndex((el) => el.id === id);
-      console.log(index, 'index');
       const oldEl = state[index];
-      console.log(oldEl, 'oldEl');
       const newEl = { ...oldEl, idTimeEl: idTime };
-      console.log(newEl, 'newEl');
-      console.log([...state.slice(0, index), newEl, ...state.slice(index + 1)], 'result');
       return [...state.slice(0, index), newEl, ...state.slice(index + 1)];
     });
   };
@@ -154,7 +149,6 @@ const TodoApp = () => {
     setStyleLi(newArray);
   };
   const doneCount = styleLi.filter((el) => !el.done).length;
-  console.log(styleLi);
   return (
     <section className="todoapp">
       <NewTaskForm addItem={addItem} />
